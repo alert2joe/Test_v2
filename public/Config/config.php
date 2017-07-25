@@ -1,5 +1,5 @@
 <?php
-
+//debugLog.txt
 define("ENABLE_LOG",true);
 
 //define("GOOGLE_API_KEY","AIzaSyDklZABjWfNoMGyIA1z-DQkrQQ7uqE9n1k");
