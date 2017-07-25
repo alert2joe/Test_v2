@@ -50,7 +50,7 @@
 
   <div id="map"></div>
 <div id="penal">
-Max marker :4
+Max marker :<?php echo WAYPOINT_MAX;?>
   <p>
   <button type="button" onclick ='clearOverlays()' class="btn btn-primary btn-xs">Remove all marker</button>
 </p>
