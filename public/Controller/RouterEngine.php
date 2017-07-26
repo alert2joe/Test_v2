@@ -53,7 +53,7 @@ class RouterEngine{
                     $shotestRoute['duration'] = $duration;
                     $shotestRoute['index']  = $k;
                 }
-                $tmpDuration = $totalValue['duration'];
+                $tmpDuration = $duration;
             }
 
             return $shotestRoute;
