@@ -5,11 +5,7 @@ use Evenement\EventEmitter;
 class DrivingRouter{
 
     function getToken(){
-			$php_input = file_get_contents('php://input');
-			if($php_input && isJson($php_input)){
-				common::$request['post']['paths'] = json_decode($php_input,1);
-			}
-			
+
             $isValid = $this->__checkDataValid();
             if($isValid!==true){
                 $this->__response(array(
@@ -42,6 +38,12 @@ class DrivingRouter{
             return GET_TOKEN_ERROR_MSG_ROBOT_CHECK;
                 
         }
+		$php_input = file_get_contents('php://input');
+		
+		if($php_input && isJson($php_input)){
+			common::$request['post']['paths'] = json_decode($php_input,1);
+		}
+		
         $r= common::$request;
 
         if(isset($r['post'])==false ||
