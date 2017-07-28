@@ -1,5 +1,5 @@
 <?php
-
+namespace RouteApi\lib;
 /**
  * Polyline
  *

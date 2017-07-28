@@ -1,4 +1,8 @@
 <?php
+namespace RouteApi\Controller;
+use RouteApi\lib\directionsGoogle;
+use LLM\lib\common;
+use LLM\lib\curlAsync;
 
 class RouterEngine{
 
@@ -13,15 +17,15 @@ class RouterEngine{
         list($urls,$routePoints) = $this->__getAllUrl($points);
         
         $jsonResult = curlAsync::async_get_url($urls);
-        //include(APP."dummy.php");
-        //$jsonResult = $dummy;
+
         if(count($jsonResult) != count($points)-1){
             $this->__updateTokenResult(array(
                 'status'=>ROUTE_API_STATUS_FAILURE,
                 'error' =>ROUTE_API_ERROR_MSG_RETURN_ERROR,
                 ),$firstRow);
         }
-        //common::log($jsonResult);
+		common::log($routePoints);
+
     
         $shotestRoute = $this->__handleResult($jsonResult,$routePoints);
 
@@ -47,6 +51,7 @@ class RouterEngine{
                     $this->__checkWaypointStatus($v['geocoded_waypoints']);
                 }
                 list($duration,$distance) = $this->__getTotalDurationDistance($v['routes'][0]['legs']);
+
                 if($duration < $tmpDuration){
                     $shotestRoute['waypoint_order'] = $v['routes'][0]['waypoint_order'];
                     $shotestRoute['distance'] = $distance;
@@ -68,6 +73,7 @@ class RouterEngine{
            $duration +=$leg["duration"]["value"];
            $distance +=$leg["distance"]["value"];
         } 
+
         return array($duration,$distance);
     }
 
@@ -147,8 +153,7 @@ class RouterEngine{
     private function __updateTokenResult($data,$errorLog = false){
  
         if($errorLog){
-            common::log($data);
-            common::log($errorLog);
+			EventEmitter::emit('RouteApi.track_failure', [$data,$errorLog]);
         }
         common::sessionStartById($this->sid);
         $_SESSION[$this->UUID] = $data;

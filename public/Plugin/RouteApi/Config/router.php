@@ -1,8 +1,9 @@
 <?php
-
+use LLM\lib\appRouter;
+use LLM\lib\common;
  appRouter::add('/^\/route$/',function($uri){
 
-        $api = new DrivingRouter();
+        $api = new RouteApi\Controller\DrivingRouter();
         $api->getToken();
         exit();
   
@@ -12,22 +13,19 @@
 
  appRouter::add('/^\/route\/.+$/',function($uri){
     
-        $api = new DrivingRouter();
+        $api = new RouteApi\Controller\DrivingRouter();
         $api->getResult($uri[1]);
         exit();
     
  });
 
 
- appRouter::add('/^\/$/',function($uri){
-        header("HTTP/1.0 404 Not Found");
-        exit();
-        
- });
+
 
 
  appRouter::add('/^\/demo$/',function($uri){
-        include("demo.php");
+	
+        include(dirname(dirname(__FILE__))."/demo.php");
  });
 
 
@@ -37,7 +35,7 @@
 
     $prarms = common::$request['cli'];
  
-    $api = new RouterEngine();
+    $api = new RouteApi\Controller\RouterEngine();
 
     $api->getResult($prarms);
 
@@ -45,8 +43,3 @@
     
  });
 
-  appRouter::add('/^\/testapi$/',function($uri){
-    $api = new RouterEngine();
-    $api->testapi();
-    exit();
- });

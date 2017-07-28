@@ -173,6 +173,7 @@ class ClassLoader
      */
     public function findFile($class)
     {
+	
         if (false !== $pos = strrpos($class, '\\')) {
             // namespaced class name
             $classPath = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $pos)).DIRECTORY_SEPARATOR;
@@ -200,12 +201,13 @@ class ClassLoader
         foreach ($this->fallbackDirs as $dir) {
             
             if (file_exists($dir.DIRECTORY_SEPARATOR.$classPath)) {
+				
                 return $dir.DIRECTORY_SEPARATOR.$classPath;
             }
         }
 
         if ($this->useIncludePath && $file = stream_resolve_include_path($classPath)) {
-            
+         
             return $file;
         }
     }

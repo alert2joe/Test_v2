@@ -1,5 +1,5 @@
 <?php
-
+namespace LLM\lib;
 class common{
 
     static $request = null;
@@ -7,7 +7,8 @@ class common{
         if(!ENABLE_LOG){
             return false;
         }
-        $fp = fopen(DS."application".DS."debugLog.txt", "a");
+	
+        $fp = fopen(dirname(APP).DS."debugLog.txt", "a");
         $a=print_r($t,1);
         fwrite($fp, "Start ".date("Y-m-d H:i:s")." \n");
         fwrite($fp,$a." \n");

@@ -1,5 +1,5 @@
 <?php
-
+namespace LLM\lib;
 class appRouter{
 
     static $routerList = array();
@@ -34,13 +34,22 @@ class appRouter{
             $realPath[] = $v;
             }
         }
+		$routerFunction = null;
         foreach($routerList as $v){
             $preg =$v['regCond'];
      
             if(preg_match($preg,$uri)){
-                $v['callback']($realPath);
+                $routerFunction = $v['callback'];
             }
         }
+		if(is_null($routerFunction)){
+			header("HTTP/1.0 404 Not Found");
+			exit();
+		}
+		
+		$routerFunction($realPath);
+		exit();
+       
     }
 
 

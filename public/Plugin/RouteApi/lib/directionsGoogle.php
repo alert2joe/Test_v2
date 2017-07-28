@@ -1,18 +1,19 @@
 <?php
-
+namespace RouteApi\lib;
 
 class directionsGoogle{
 
 
 
     public function getApiUrl($origins,$destinations,$waypoints){
+	
         $destinations =$this->__pt2txt($destinations);
         $origins =$this->__pt2txt($origins);
-        $waypoints = Polyline::encode($waypoints);
+        $waypoints = \RouteApi\lib\Polyline::encode($waypoints);
         $waypoints = "enc:{$waypoints}:";
         
         return $this->__getGoogleApiURL($origins,$destinations,$waypoints);
-   
+  
 
     }
 

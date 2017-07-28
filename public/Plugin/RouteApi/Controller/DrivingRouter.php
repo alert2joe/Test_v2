@@ -1,5 +1,7 @@
 <?php
-
+namespace RouteApi\Controller;
+use LLM\lib\common;
+use Evenement\EventEmitter;
 class DrivingRouter{
 
     function getToken(){
@@ -9,7 +11,7 @@ class DrivingRouter{
                 'error'=>$isValid,
                 ));
             }
-
+			
             $data = common::$request['post']['paths'];
             $token = common::genUUID();
             $path = "/RouterEngine";
@@ -18,7 +20,9 @@ class DrivingRouter{
                 'UUID'=>$token,
                 'data'=>$data,
             );
-        
+			
+			EventEmitter::emit('RouteApi.getToken', [$params]);
+
             $_SESSION[$params['UUID']] = array('status'=>ROUTE_API_STATUS_PROGRESS,'timeStamp'=>time());
 
             common::callPhpAsynchronous($path,$params);

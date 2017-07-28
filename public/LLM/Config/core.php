@@ -1,20 +1,28 @@
 <?php
-
-
+use LLM\lib\PluginLoader;
+use Evenement\EventEmitter;
 define("DS",DIRECTORY_SEPARATOR);
-define("APP",DS."application".DS."public".DS);
 
-include(APP."lib".DS."ClassLoader.php");
+define("APP",dirname(dirname(dirname(__FILE__))).DS);
+define("APPLLM",APP.'LLM'.DS);
+
+include(APPLLM."lib".DS."ClassLoader.php");
+
 $loader = new Symfony\Component\ClassLoader\ClassLoader();
-$loader->addPrefix('', APP.'lib');
-$loader->addPrefix('', APP.'Controller');
+
+//$loader->addPrefix('', APPLLM.'lib');
+$loader->addPrefix('', APP.'Plugin');
+$loader->addPrefix('', APP.'LLM'.DS.'lib');
+$loader->addPrefix('', APP);
 $loader->register();
 
+include(APPLLM."Config".DS."config.php");
 
- include(APP."Config".DS."config.php");
- include(APP."Config".DS."router.php");
+PluginLoader::init($loader);
 
 
+	
+	
 // some global function 
  if (!function_exists('pr')) {
  function pr($t){
@@ -43,3 +51,4 @@ if (!function_exists('isJson')) {
 	return (json_last_error() == JSON_ERROR_NONE);
 	}
 }
+

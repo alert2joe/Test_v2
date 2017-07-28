@@ -1,4 +1,5 @@
 <?php
+namespace LLM\lib;
 class curlAsync{
 static function async_get_url($url_array, $wait_usec = 0)
 {
