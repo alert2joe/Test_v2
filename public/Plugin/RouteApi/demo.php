@@ -130,6 +130,7 @@ $.ajax({
     dataType :'json',
   method: "POST",
   url: "/route",
+  //data: '[[22.32308300997969,114.18691635131836],[22.317683823893706,114.17146682739258]]'
   data: {paths:postData}
 })
   .done(function( msg ) {
