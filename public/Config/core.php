@@ -3,7 +3,7 @@ use LLM\lib\PluginLoader;
 use Evenement\EventEmitter;
 define("DS",DIRECTORY_SEPARATOR);
 
-define("APP",dirname(dirname(dirname(__FILE__))).DS);
+define("APP",dirname(dirname(__FILE__)).DS);
 define("APPLLM",APP.'LLM'.DS);
 
 include(APPLLM."lib".DS."ClassLoader.php");
@@ -16,7 +16,7 @@ $loader->addPrefix('', APP.'LLM'.DS.'lib');
 $loader->addPrefix('', APP);
 $loader->register();
 
-include(APPLLM."Config".DS."config.php");
+include(APP."Config".DS."config.php");
 
 PluginLoader::init($loader);
 

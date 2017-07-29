@@ -11,7 +11,7 @@ if(isset($_SERVER['argv'][1]) == false){
 
 
 
-include(dirname(__FILE__).DIRECTORY_SEPARATOR."LLM".DIRECTORY_SEPARATOR."Config".DIRECTORY_SEPARATOR."core.php");
+include(dirname(__FILE__).DIRECTORY_SEPARATOR."Config".DIRECTORY_SEPARATOR."core.php");
 
 
 common::Dispatcher();
