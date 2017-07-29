@@ -122,7 +122,10 @@ Auto track per second (<span class='autoTrackCount'>0</span>)
  function getToken(){
    $('.getTokenResult').empty();
    $('.autoTrack').val('');
-   
+   if($('.ajaxOutTa').val()==''){
+	   alert('no data');
+	   return false;
+   }
    var postData = JSON.parse($.trim($('.ajaxOutTa').val()));
 
 

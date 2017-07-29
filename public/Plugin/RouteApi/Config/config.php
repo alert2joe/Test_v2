@@ -6,7 +6,7 @@ define("GOOGLE_API_KEY","AIzaSyCcA3y-r-JUTn-hEC_3ysabEJRfgSqAqTw");
 
 define("DRIVING_TIME_GOOGLE_OFFSET_RATE",1);
 
-define("PROGRESS_TIMEOUT_SECOND",5);
+define("PROGRESS_TIMEOUT_SECOND",10);
 define("WAYPOINT_MAX",10);
 
 define("ROUTE_API_STATUS_PROGRESS",'in progress');

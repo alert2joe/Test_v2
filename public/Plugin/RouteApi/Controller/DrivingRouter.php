@@ -6,10 +6,10 @@ class DrivingRouter{
 
     function getToken(){
 
-            $isValid = $this->__checkDataValid();
-            if($isValid!==true){
+            $errorMsg = $this->__checkDataValid();
+            if($errorMsg!==false){
                 $this->__response(array(
-                'error'=>$isValid,
+                'error'=>$errorMsg,
                 ));
             }
 
@@ -70,31 +70,48 @@ class DrivingRouter{
                 return GET_TOKEN_ERROR_MSG_WAYPOINT_FORMAT_ERROR;
             }
         }
-        return true;
+        return false;
     }
     function getResult($token){
-        $output = array(
-            'status'=>ROUTE_API_STATUS_FAILURE,
-            'error' =>ROUTE_API_ERROR_MSG_TOKEN_NOT_EXIST
-        );
-        if(isset($_SESSION[$token])){
-        
-            $output = $_SESSION[$token];
+		$this->__getResultCheckValue($token);//return err msg if params invalid
+        $output = $_SESSION[$token];
+        unset($output['timeStamp']);
+        $this->__response($output);
+    }
+	
+	private function __getResultCheckValue($token){
+		
+		if($this->robotPrevent()==false){
+			$output = array(
+				'status'=>ROUTE_API_STATUS_FAILURE,
+				'error' =>GET_TOKEN_ERROR_MSG_ROBOT_CHECK
+			);
+			$this->__response($output);
+		}
+		
+        if(isset($_SESSION[$token])==false){
+			$output = array(
+				'status'=>ROUTE_API_STATUS_FAILURE,
+				'error' =>ROUTE_API_ERROR_MSG_TOKEN_NOT_EXIST
+			);
+			$this->__response($output);
            
         }
-        if($output['status']==ROUTE_API_STATUS_PROGRESS &&
-            time() > ($output['timeStamp'] + PROGRESS_TIMEOUT_SECOND)
+        if($_SESSION[$token]['status']==ROUTE_API_STATUS_PROGRESS &&
+            time() > ($_SESSION[$token]['timeStamp'] + PROGRESS_TIMEOUT_SECOND)
          ){
             $output = array(
                 'status'=>ROUTE_API_STATUS_FAILURE,
                 'error' =>ROUTE_API_ERROR_MSG_TIMEOUT
             );
+			$this->__response($output);
         }
-        unset($output['timeStamp']);
-        $this->__response($output);
-
-
+		
+		return true;
     }
+	
+	
+	
 
     private function __response($output){
 

@@ -26,11 +26,12 @@ class common{
 
     static function callPhpAsynchronous($path,$params=array()){
          $paramsJson = urlencode(json_encode($params));
-         
+			
          $path = urlencode($path);
-         $fp= popen("php ".APP."cli.php $path $paramsJson > /dev/null &","r");
-
-
+	     $path = escapeshellarg($path);
+		 $paramsJson = escapeshellarg($paramsJson);
+		  pclose(popen("php ".APP."cli.php $path $paramsJson > /dev/null &","r"));
+	
     }
 
     static function Dispatcher(){

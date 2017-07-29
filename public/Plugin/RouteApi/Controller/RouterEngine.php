@@ -10,30 +10,24 @@ class RouterEngine{
     public $UUID = null;
 
     function getResult($params){
-
-        $this->__initParams($params);
+		
+        $this->__initParams($params);//return err msg if params invalid
+		
         $points = $params['data'];
     
-        list($urls,$routePoints) = $this->__getAllUrl($points);
+        list($urls,$destinationSet) = $this->__getAllUrl($points);
         
         $jsonResult = curlAsync::async_get_url($urls);
+		
+		$phpResult = $this->__json2phpResult($jsonResult,$points);//return err msg if params invalid
+		
+        $shotestRoute = $this->__getShotestRoute($phpResult);
 
-        if(count($jsonResult) != count($points)-1){
-            $this->__updateTokenResult(array(
-                'status'=>ROUTE_API_STATUS_FAILURE,
-                'error' =>ROUTE_API_ERROR_MSG_RETURN_ERROR,
-                ),$firstRow);
-        }
-		common::log($routePoints);
-
-    
-        $shotestRoute = $this->__handleResult($jsonResult,$routePoints);
-
-       
-        $shotestRoutePoints = $routePoints[$shotestRoute['index']];
+        $shotestDestinationSet = $destinationSet[$shotestRoute['index']];
+		
         $output = array(
             'status'=>ROUTE_API_STATUS_SUCCESS,
-            'path'=>$this->__getPath($shotestRoutePoints,$shotestRoute['waypoint_order']),
+            'path'=>$this->__getPath($shotestDestinationSet,$shotestRoute['waypoint_order']),
             'total_distance'=>$shotestRoute['distance'],
             'total_time'=>($shotestRoute['duration'])*DRIVING_TIME_GOOGLE_OFFSET_RATE,
         );
@@ -41,17 +35,33 @@ class RouterEngine{
         $this->__updateTokenResult($output);
 
     }
-    private function __handleResult($jsonResult){
+	private function __json2phpResult($jsonResult,$points){
+		$phpArray = [];
+		
+		if(count($jsonResult) != count($points)-1){
+            $this->__updateTokenResult(array(
+                'status'=>ROUTE_API_STATUS_FAILURE,
+                'error' =>ROUTE_API_ERROR_MSG_RETURN_ERROR,
+                ),$jsonResult);
+        }
+		
+		foreach($jsonResult as $k=>$v){
+			$v = $this->__getParseJson($v); //return err msg if params invalid
+			if($k==0){
+                $this->__checkWaypointStatus($v['geocoded_waypoints']); //return err msg if params invalid
+            }
+			$phpArray[$k]=$v;
+		}
+		return $phpArray;
+	}
+	
+    private function __getShotestRoute($result){
             $shotestRoute = [];
             $tmpDuration = 9999999999999;
-            foreach($jsonResult as $k=>$v){
-                $v = $this->__getParseJson($v);
-                if($k==0){
-                    // return error msg if not ok
-                    $this->__checkWaypointStatus($v['geocoded_waypoints']);
-                }
+            foreach($result as $k=>$v){
+             
                 list($duration,$distance) = $this->__getTotalDurationDistance($v['routes'][0]['legs']);
-
+				//find shotest
                 if($duration < $tmpDuration){
                     $shotestRoute['waypoint_order'] = $v['routes'][0]['waypoint_order'];
                     $shotestRoute['distance'] = $distance;
@@ -69,11 +79,14 @@ class RouterEngine{
 
         $distance = 0;
         $duration = 0;
+		
         foreach($legs as $leg){
+			
            $duration +=$leg["duration"]["value"];
            $distance +=$leg["distance"]["value"];
+		   
         } 
-
+		
         return array($duration,$distance);
     }
 
@@ -89,11 +102,11 @@ class RouterEngine{
 
     private function __checkWaypointStatus($geocodedWaypoints){
         foreach($geocodedWaypoints as $wp){
-            if($wp['geocoder_status'] !='OK'){
+            if(isset($wp['geocoder_status'])==false || $wp['geocoder_status'] !='OK'){
                 $this->__updateTokenResult(array(
                         'status'=>ROUTE_API_STATUS_FAILURE,
                         'error' =>ROUTE_API_ERROR_MSG_WAYPOINT_INVAILD,
-                ));
+                ),$wp);
             }
         } 
     }
@@ -115,13 +128,14 @@ class RouterEngine{
         array_shift($points);
 
         $curlList = [];
-        $pointList = [];
+        $destinationSet = [];
         $directionsGoogle = new directionsGoogle();
         foreach($points as $k=>$v){
+			//loop every wayPoints as destination
            $destination = $v;
            $wayPoints = $points;
            array_splice($wayPoints, $k, 1);
-           $pointList[]=array(
+           $destinationSet[]=array(
                'origin'=>$origin,
                'destination'=>$destination,
                'wayPoints'=>$wayPoints,
@@ -130,7 +144,7 @@ class RouterEngine{
            $curlList[] = $directionsGoogle->getApiUrl($origin,$destination,$wayPoints);
         }
        
-        return  array($curlList,$pointList) ;
+        return  array($curlList,$destinationSet) ;
 
     }
 

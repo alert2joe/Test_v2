@@ -10,11 +10,12 @@ class PluginLoader{
 		$ps = self::$pluginList;
 		
 		foreach($ps as $k=>$v){
-			$pluginPath= APP."Plugin".DS.$k;
+			$pluginPath 		= APP."Plugin".DS.$k;
+			$pluginConfigPath 	= $pluginPath.DS."Config".DS;
 			$paths = [
-				'config' => $pluginPath.DS."Config".DS."config.php",
-				'router' => $pluginPath.DS."Config".DS."router.php",
-				'event' => $pluginPath.DS."Config".DS."event.php"
+				'config' => $pluginConfigPath."config.php",
+				'router' => $pluginConfigPath."router.php",
+				'event'  => $pluginConfigPath."event.php"
 			];
 			foreach($paths as $key=>$path ){
 				if(isset($v[$key]) && $v[$key]==true &&
