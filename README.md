@@ -4,11 +4,7 @@
 cd PROJECT_FORDER
 docker-compose up
 ```
-### Demo
-Easy Demo(just for test and development use):
-```php
-/demo
-```
+
 
 
 
@@ -46,3 +42,24 @@ paths[1][]:22.315142958169385
 paths[1][]:114.16906356811523
 ```
 	
+	
+	
+	
+### plugin for Demo RouteApi
+#### just for test and development use, in this demo
+```
+- Click google map to create waypoints json data
+- Call RouteApi and return token
+- Auto track result with token
+```
+		
+#### How to use
+load plugin
+```php
+//Uncomment below line (public\Config\config.php)
+//PluginLoader::load('RouteApiDemo',array('config'=>false,'router'=>true,'event'=>false));
+
+```
+//demo url
+http://yourDomain/demo
+
