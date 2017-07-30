@@ -11,13 +11,13 @@ docker-compose up
 
 ### Add 3 features for scalability
   1. Plugin
-		- The api of this task is one of plugin. (RouteApi),
+		- Route api is one of plugin. (RouteApi),
 ```php
 // Config/config.php
 PluginLoader::load('RouteApi',array('config'=>true,'router'=>true,'event'=>true));
 ```
   2. Event
-		- For extra api requirement, like,
+		- For some requirement like,
 			- Inform error
 			- Analysis
 ```php
