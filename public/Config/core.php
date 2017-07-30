@@ -10,7 +10,6 @@ include(APPLLM."lib".DS."ClassLoader.php");
 
 $loader = new Symfony\Component\ClassLoader\ClassLoader();
 
-//$loader->addPrefix('', APPLLM.'lib');
 $loader->addPrefix('', APP.'Plugin');
 $loader->addPrefix('', APP.'LLM'.DS.'lib');
 $loader->addPrefix('', APP);

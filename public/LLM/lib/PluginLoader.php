@@ -8,7 +8,7 @@ class PluginLoader{
 
     static function init($ClassLoader){
 		$ps = self::$pluginList;
-		
+	
 		foreach($ps as $k=>$v){
 			$pluginPath 		= APP."Plugin".DS.$k;
 			$pluginConfigPath 	= $pluginPath.DS."Config".DS;
@@ -21,15 +21,18 @@ class PluginLoader{
 				if(isset($v[$key]) && $v[$key]==true &&
 					file_exists($path)
 				){
+				
 					include($path);
 				}
 			}
 	
-			$ClassLoader->addPrefix('', $pluginPath);
+
+			//$ClassLoader->addPrefix('', $pluginPath);
 		}
         
     }
     static function load($plugiName,$config){
+		
 		self::$pluginList[$plugiName]=$config;
     }
 
