@@ -9,7 +9,7 @@ docker-compose up
 
 
 
-### Add 3 features for scalability
+### For scalability add three features
   1. Plugin
 		- Route api is one of plugin. (RouteApi),
 ```php
